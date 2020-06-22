@@ -3,6 +3,7 @@ package com.stefan.bd.hadoop.hdfs;
 import com.google.gson.internal.$Gson$Preconditions;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FSDataInputStream;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
@@ -45,10 +46,18 @@ public class HDFSAPP {
         fileSystem.mkdirs(new Path("/hdfsapi/test"));
     }
 
+    @Test
+    public void creat() throws Exception{
+        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/test/a.txt"));
+        out.writeUTF("hello there!");
+        out.flush();
+        out.close();
+    }
+
+
     /**
      * Open HDFS content
      */
-
     @Test
     public void text() throws Exception{
         FSDataInputStream in = fileSystem.open(new Path("/1.txt"));
