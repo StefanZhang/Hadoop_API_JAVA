@@ -19,7 +19,7 @@ import java.net.URI;
 
 public class HDFSAPP {
 
-    public static final String HDFS_PATH = "hdfs://47.252.26.166:8020";
+    public static final String HDFS_PATH = "hdfs://192.168.100.128:8020";
     FileSystem fileSystem = null;
     Configuration configuration = null;
 
@@ -27,14 +27,13 @@ public class HDFSAPP {
     public void setUP() throws Exception{
         System.out.println("----------Setup----------");
         configuration = new Configuration();
-        configuration.set("dfs.client.use.datanode.hostname", "true");
         /**
          * Construct a HDFS Client Object
          * Param 1: URI
          * Param 2: Config
          * Param 3: User name
          */
-        fileSystem = FileSystem.get(new URI(HDFS_PATH), configuration, "hadoop");
+        fileSystem = FileSystem.get(new URI(HDFS_PATH), configuration, "root");
     }
 
     /**
@@ -54,13 +53,12 @@ public class HDFSAPP {
         out.close();
     }
 
-
     /**
      * Open HDFS content
      */
     @Test
     public void text() throws Exception{
-        FSDataInputStream in = fileSystem.open(new Path("/1.txt"));
+        FSDataInputStream in = fileSystem.open(new Path("/hdfsapi/test/a.txt"));
         IOUtils.copyBytes(in, System.out, 1024);
     }
 
