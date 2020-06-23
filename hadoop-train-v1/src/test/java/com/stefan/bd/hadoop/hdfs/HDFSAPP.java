@@ -37,13 +37,16 @@ public class HDFSAPP {
     }
 
     /**
-     *
      * Make HDFS directory
      */
     @Test
     public void mkdir() throws Exception{
         fileSystem.mkdirs(new Path("/hdfsapi/test"));
     }
+
+    /**
+     * Make new file a.txt with string
+     */
 
     @Test
     public void creat() throws Exception{
