@@ -11,6 +11,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.net.URI;
 
 /**
@@ -27,6 +28,10 @@ public class HDFSAPP {
     public void setUP() throws Exception{
         System.out.println("----------Setup----------");
         configuration = new Configuration();
+
+        // Set the dfs.replication to 1, instead of hdfs-default as 3
+        configuration.set("dfs.replication", "1");
+
         /**
          * Construct a HDFS Client Object
          * Param 1: URI
@@ -50,7 +55,7 @@ public class HDFSAPP {
 
     @Test
     public void creat() throws Exception{
-        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/test/a.txt"));
+        FSDataOutputStream out = fileSystem.create(new Path("/hdfsapi/test/b.txt"));
         out.writeUTF("hello there!");
         out.flush();
         out.close();
@@ -63,6 +68,18 @@ public class HDFSAPP {
     public void text() throws Exception{
         FSDataInputStream in = fileSystem.open(new Path("/hdfsapi/test/a.txt"));
         IOUtils.copyBytes(in, System.out, 1024);
+    }
+
+    /**
+     * Rename files
+     * */
+
+    @Test
+    public void rename() throws Exception {
+        Path orgPath = new Path("/hdfsapi/test/a.txt");
+        Path newPath = new Path("/hdfsapi/test/c.txt");
+        boolean r = fileSystem.rename(orgPath, newPath);
+        System.out.println(r);
     }
 
     @After
