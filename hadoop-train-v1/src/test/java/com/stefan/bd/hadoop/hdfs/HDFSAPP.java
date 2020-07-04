@@ -2,16 +2,14 @@ package com.stefan.bd.hadoop.hdfs;
 
 import com.google.gson.internal.$Gson$Preconditions;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FSDataInputStream;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 import org.apache.hadoop.io.IOUtils;
+import org.apache.hadoop.util.Progressable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
+import java.io.*;
 import java.net.URI;
 
 /**
@@ -80,6 +78,66 @@ public class HDFSAPP {
         Path newPath = new Path("/hdfsapi/test/c.txt");
         boolean r = fileSystem.rename(orgPath, newPath);
         System.out.println(r);
+    }
+
+    /***
+     * Copy local files to HDFS
+     */
+    @Test
+    public void CopyFromLocal() throws Exception{
+        Path orgPath = new Path("C:\\Users\\Stefan\\OneDrive\\桌面\\local.txt");
+        Path newPath = new Path("/hdfsapi/test/");
+        fileSystem.copyFromLocalFile(orgPath, newPath);
+    }
+
+    /***
+     * Copy local large files to HDFS, with progress
+     */
+    @Test
+    public void CopyFromLocalLarge() throws Exception{
+
+        Path newPath = new Path("/hdfsapi/test/Aladdin.mkv");
+
+        // Define input stream
+        InputStream in = new BufferedInputStream(new FileInputStream(new File("E:\\Aladdin.mkv")));
+
+        FSDataOutputStream out = fileSystem.create(newPath, new Progressable() {
+            @Override
+            public void progress() {
+                System.out.print(".");
+            }
+            });
+
+        IOUtils.copyBytes(in, out, 4096);
+
+    }
+
+    /**
+     * List the files in dfs
+     */
+    @Test
+    public void list() throws Exception{
+        FileStatus[] status = fileSystem.listStatus(new Path("/hdfsapi/test"));
+
+        for(FileStatus stat : status){
+            String isDir = stat.isDirectory() ? "Dir" : "File";
+            String permission = stat.getPermission().toString();
+            short rep = stat.getReplication();
+            long len = stat.getLen();
+            String path = stat.getPath().toString();
+
+            System.out.println(isDir + "\t" + permission + "\t" + rep + "\t" + len + "\t" + path);
+        }
+
+    }
+
+    /**
+     * Delete a file
+     */
+    @Test
+    public void delete() throws Exception{
+        boolean del = fileSystem.delete(new Path("/hdfsapi/test/Aladdin.mkv"), true);
+        System.out.println(del);
     }
 
     @After
