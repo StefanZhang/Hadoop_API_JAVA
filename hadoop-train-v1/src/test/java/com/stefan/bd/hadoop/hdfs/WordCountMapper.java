@@ -7,7 +7,7 @@ package com.stefan.bd.hadoop.hdfs;
 public class WordCountMapper implements Mapper{
 
     public void map(String line, Context context) {
-        String[] words = line.split("\t");
+        String[] words = line.split("\t"); //.toLowerCase()
         for (String word : words){
             Object value = context.get(word);
             if(value == null){

@@ -33,14 +33,17 @@ public class HDFSWCApp {
         Properties properties = ParamsUtils.getProperties();
 
         //1. Read file from HDFS ==> HDFS API
-        Path input = new Path(properties.getProperty("INPUT_PATH"));
+        Path input = new Path(properties.getProperty(Constants.INPUT_PATH));
 
 
-        FileSystem fileSystem = FileSystem.get(new URI(properties.getProperty("HDFS_PATH")), new Configuration(), "root");
+        FileSystem fileSystem = FileSystem.get(new URI(properties.getProperty(Constants.HDFS_PATH)), new Configuration(), "root");
 
         RemoteIterator<LocatedFileStatus> iterator = fileSystem.listFiles(input, false);
 
-        Mapper mapper = new WordCountMapper();
+        //Mapper mapper = new WordCountMapper();
+
+        Class<?> clazz = Class.forName(properties.getProperty(Constants.MAPPER_CLASS));
+        Mapper mapper = (Mapper)clazz.newInstance();
         Context context = new Context();
 
         while (iterator.hasNext()){
@@ -63,9 +66,9 @@ public class HDFSWCApp {
         Map<Object, Object> contextMap = context.getCacheMap();
 
         //4. Output the results to HDFS ==> HDFS API
-        Path output = new Path(properties.getProperty("OUTPUT_PATH"));
+        Path output = new Path(properties.getProperty(Constants.OUTPUT_PATH));
 
-        FSDataOutputStream outstream = fileSystem.create(new Path(output, new Path(properties.getProperty("OUTPUT_FILE"))));
+        FSDataOutputStream outstream = fileSystem.create(new Path(output, new Path(properties.getProperty(Constants.OUTPUT_FILE))));
 
         //Put results from step3(cache) to output stream
         Set<Map.Entry<Object, Object>> entries = contextMap.entrySet();
