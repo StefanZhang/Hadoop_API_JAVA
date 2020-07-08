@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 /**
@@ -24,14 +25,18 @@ import java.util.Set;
 
 public class HDFSWCApp {
 
-    public static final String HDFS_PATH = "hdfs://192.168.100.128:8020";
+    //public static final String HDFS_PATH = "hdfs://192.168.100.128:8020";
 
     public static void main(String[] args) throws Exception{
 
-        //1. Read file from HDFS ==> HDFS API
-        Path input = new Path("/hdfsapi/test/wc.txt");
+        //load config
+        Properties properties = ParamsUtils.getProperties();
 
-        FileSystem fileSystem = FileSystem.get(new URI(HDFS_PATH), new Configuration(), "root");
+        //1. Read file from HDFS ==> HDFS API
+        Path input = new Path(properties.getProperty("INPUT_PATH"));
+
+
+        FileSystem fileSystem = FileSystem.get(new URI(properties.getProperty("HDFS_PATH")), new Configuration(), "root");
 
         RemoteIterator<LocatedFileStatus> iterator = fileSystem.listFiles(input, false);
 
@@ -58,9 +63,9 @@ public class HDFSWCApp {
         Map<Object, Object> contextMap = context.getCacheMap();
 
         //4. Output the results to HDFS ==> HDFS API
-        Path output = new Path("/hdfsapi/test/");
+        Path output = new Path(properties.getProperty("OUTPUT_PATH"));
 
-        FSDataOutputStream outstream = fileSystem.create(new Path(output, new Path("wc.out")));
+        FSDataOutputStream outstream = fileSystem.create(new Path(output, new Path(properties.getProperty("OUTPUT_FILE"))));
 
         //Put results from step3(cache) to output stream
         Set<Map.Entry<Object, Object>> entries = contextMap.entrySet();
