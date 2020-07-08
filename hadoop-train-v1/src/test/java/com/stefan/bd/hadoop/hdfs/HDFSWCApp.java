@@ -35,6 +35,9 @@ public class HDFSWCApp {
 
         RemoteIterator<LocatedFileStatus> iterator = fileSystem.listFiles(input, false);
 
+        Mapper mapper = new WordCountMapper();
+        Context context = new Context();
+
         while (iterator.hasNext()){
             LocatedFileStatus file = iterator.next();
             FSDataInputStream instream = fileSystem.open(file.getPath());
@@ -42,8 +45,8 @@ public class HDFSWCApp {
 
             String line = "";
             while ((line = reader.readLine()) != null){
-                //TODO 2. Word count ==> Mapper
-
+                mapper.map(line, context);
+                //TODO... Put result into cache(context)
             }
 
             reader.close();
@@ -51,15 +54,15 @@ public class HDFSWCApp {
 
         }
 
-        //TODO 3. Cache the results ==> Context
-        Map<Object, Object> contextMap = new HashMap<Object, Object>();
+        //3. Cache the results ==> Context
+        Map<Object, Object> contextMap = context.getCacheMap();
 
         //4. Output the results to HDFS ==> HDFS API
         Path output = new Path("/hdfsapi/test/");
 
         FSDataOutputStream outstream = fileSystem.create(new Path(output, new Path("wc.out")));
 
-        //TODO Put results from step3(cache) to output stream
+        //Put results from step3(cache) to output stream
         Set<Map.Entry<Object, Object>> entries = contextMap.entrySet();
 
         for(Map.Entry<Object, Object> entry : entries){
