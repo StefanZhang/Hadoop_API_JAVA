@@ -148,17 +148,4 @@ public class HDFSAPP {
     }
 
 
-//    public static void main(String[] args) throws Exception{
-//
-//        Configuration configuration = new Configuration();
-//
-//        FileSystem fileSystem = FileSystem.get(new URI("hdfs://47.252.26.166:8020"), configuration, "hadoop");
-//
-//        Path path = new Path("/hdfsapi/test");
-//
-//        boolean result =  fileSystem.mkdirs(path);
-//
-//        System.out.println(result);
-//    }
-
 }
