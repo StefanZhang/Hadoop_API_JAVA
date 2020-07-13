@@ -85,8 +85,8 @@ public class HDFSAPP {
      */
     @Test
     public void CopyFromLocal() throws Exception{
-        Path orgPath = new Path("C:\\Users\\Stefan\\OneDrive\\桌面\\wc.txt");
-        Path newPath = new Path("/hdfsapi/test/");
+        Path orgPath = new Path("C:\\Users\\Stefan\\OneDrive\\桌面\\i.txt");
+        Path newPath = new Path("/wordcount/input/");
         fileSystem.copyFromLocalFile(orgPath, newPath);
     }
 
@@ -136,7 +136,7 @@ public class HDFSAPP {
      */
     @Test
     public void delete() throws Exception{
-        boolean del = fileSystem.delete(new Path("/hdfsapi/test/local.txt"), true);
+        boolean del = fileSystem.delete(new Path("/wordcount/input/i.txt"), true);
         System.out.println(del);
     }
 

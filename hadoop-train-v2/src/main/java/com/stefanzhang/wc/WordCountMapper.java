@@ -23,8 +23,8 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, IntWritabl
     @Override
     protected void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
 
-        // Split the value based on the "\t"
-        String[] words = value.toString().split("\t");
+        // Split the value based on the space
+        String[] words = value.toString().split("\\s+");
 
         for (String word : words){
             context.write(new Text(word), new IntWritable(1));
