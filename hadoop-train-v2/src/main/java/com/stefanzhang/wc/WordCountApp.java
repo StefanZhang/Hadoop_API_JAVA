@@ -1,6 +1,7 @@
 package com.stefanzhang.wc;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
@@ -10,6 +11,7 @@ import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.kerby.config.Conf;
 
 import java.io.FileOutputStream;
+import java.net.URI;
 
 /**
  * Driver, sets up the parameters
@@ -40,9 +42,16 @@ public class WordCountApp {
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
 
+        //Delete the output path if exsists.
+        FileSystem fileSystem= FileSystem.get(new URI("hdfs://192.168.100.128:8020"), configuration, "root");
+        Path outputpath = new Path("/wordcount/output");
+        if (fileSystem.exists(outputpath)){
+            fileSystem.delete(outputpath, true);
+        }
+
         //Input and Output path
         FileInputFormat.setInputPaths(job, new Path("/wordcount/input"));
-        FileOutputFormat.setOutputPath(job, new Path("/wordcount/output"));
+        FileOutputFormat.setOutputPath(job, outputpath);
 
         // Send job
         boolean result = job.waitForCompletion(true);
