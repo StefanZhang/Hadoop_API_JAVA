@@ -32,8 +32,11 @@ public class AccesslocalAPP {
         job.setOutputKeyClass(NullWritable.class);
         job.setOutputValueClass(Access.class);
 
-        FileInputFormat.setInputPaths(job, new Path("access/input"));
-        FileOutputFormat.setOutputPath(job, new Path("access/output"));
+        FileInputFormat.setInputPaths(job, new Path(args[0]));
+        FileOutputFormat.setOutputPath(job, new Path(args[1]));
+
+        //FileInputFormat.setInputPaths(job, new Path("access/input"));
+        //FileOutputFormat.setOutputPath(job, new Path("access/output"));
 
         job.waitForCompletion(true);
     }
