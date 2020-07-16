@@ -20,6 +20,11 @@ public class AccesslocalAPP {
         job.setJarByClass(AccesslocalAPP.class);
         job.setMapperClass(AccessMapper.class);
         job.setReducerClass(AccessReducer.class);
+
+        // Set Partitioner
+        job.setPartitionerClass(AccessPartitioner.class);
+        job.setNumReduceTasks(3);
+
         // Mapper Output
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(Access.class);
