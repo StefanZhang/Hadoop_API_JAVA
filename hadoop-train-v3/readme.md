@@ -1,4 +1,4 @@
-# train-v3: Based on moblie carrier data, count each user's total data usage
+# Based on moblie carrier data, count each user's total data usage
 Given access.log, 
 
 col[1] phone number
