@@ -12,4 +12,6 @@ phone number, upload data, download data, total data
 
 Mapper: Split phone number, upload data, download data, Key:phone#, value:access
 
+Partitioner: Into 3 different sub outputs, using Partitioner.
+
 Reducer: (phone number, <access, access>)
